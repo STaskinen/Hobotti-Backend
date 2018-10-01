@@ -4,6 +4,7 @@
   "description": "Basic backend for the Hobotti app",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js"
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Santtu Taskinen",
