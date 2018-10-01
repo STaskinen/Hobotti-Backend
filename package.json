@@ -12,7 +12,6 @@
   "dependencies": {
     "body-parser": "*",
     "express": "*",
-    "mongoose": "*",
-    "swagger-ui": "^3.19.0"
+    "mongoose": "*"
   }
 }
