@@ -150,7 +150,7 @@ app.post('/api/users/login/', (req, res, next) => {
     const login = req.body;
     User.validateUser(login, (err, user) => {
         if(err){
-            throw err;
+            res.json({validation:"Your email was wrong"});
         }
         const salt = user.salt;
         const passwordHashDB = user.password;
@@ -159,7 +159,7 @@ app.post('/api/users/login/', (req, res, next) => {
         if(passwordHashDB === passwordHashLogin){
         res.json(user);
         } else {
-            res.json({validation:"Your password was wrong"})
+            res.json({validation:"Your password was wrong"});
         }
     })
 })
