@@ -1,0 +1,17 @@
+{
+  "name": "hobotti-backend",
+  "version": "1.0.0",
+  "description": "Basic backend for the Hobotti app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Santtu Taskinen",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "mongoose": "*",
+    "swagger-ui": "^3.19.0"
+  }
+}
