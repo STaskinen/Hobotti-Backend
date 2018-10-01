@@ -65,6 +65,6 @@ If the passwords do not match then the server returns this json
 ```
 If the the inputted email can't be found in the database the server returns
 ```json
-{"validation":"Your password was wrong"}
+{"validation":"Your email was wrong"}
 ```
 These messages might get changed in the future.
