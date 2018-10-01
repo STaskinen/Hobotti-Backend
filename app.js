@@ -164,6 +164,12 @@ app.post('/api/users/login/', (req, res, next) => {
     })
 })
 
-app.listen(3000);
-
-console.log('Running on port 3000');
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => {
+    process.on('SIGTERM', () => {
+        server.close(async ()=>{
+            await Promise.all([mongoose.connection.close(), client.quit()]);
+            process.kill();
+        });
+    });
+});
