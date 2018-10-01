@@ -159,7 +159,7 @@ app.post('/api/users/login/', (req, res, next) => {
         if(passwordHashDB === passwordHashLogin){
         res.json(user);
         } else {
-            res.json({validation:"Failed"})
+            res.json({validation:"Either your email or password was wrong"})
         }
     })
 })
