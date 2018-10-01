@@ -149,8 +149,9 @@ app.delete('/api/users/:id', (req, res, next) => {
 app.post('/api/users/login/', (req, res, next) => {
     const login = req.body;
     User.validateUser(login, (err, user) => {
+        if(user) {
         if(err){
-            res.json({validation:"Your email was wrong"});
+            throw err;
         }
         const salt = user.salt;
         const passwordHashDB = user.password;
@@ -161,6 +162,12 @@ app.post('/api/users/login/', (req, res, next) => {
         } else {
             res.json({validation:"Your password was wrong"});
         }
+    } else {
+        if(err){
+            throw err;
+        }        
+        res.json({validation:"Your email was wrong"});
+    }
     })
 })
 
