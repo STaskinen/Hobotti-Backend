@@ -1,6 +1,7 @@
 # Hobotti-Backend
 
-API URL: https://hobotti-backend-testing.herokuapp.com/api/
+API Base URL:
+[https://hobotti-backend-testing.herokuapp.com/api/](https://hobotti-backend-testing.herokuapp.com/api/)
 
 ## Main POST methods
 ### Registration
@@ -23,4 +24,10 @@ The login uses the /users/login endpoint and takes in a json object of the users
 	"password":"Passwording"
 }
 ```
-and if the inputted password matches the one in the database the users data is returned. If they do not match, server returns {validation:"Either your email or password was wrong"}
+and if the inputted password matches the one in the database the users data is returned. If they do not match, server returns a json
+```json
+{
+validation:"Either your email or password was wrong"
+}
+```
+which is likely to be changed later in development.
