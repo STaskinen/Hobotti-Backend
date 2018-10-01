@@ -61,8 +61,6 @@ and if the inputted password matches the one in the database the users data is r
 
 However if the passwords do not match then the server returns this json
 ```json
-{
-"validation":"Either your email or password was wrong"
-}
+{validation:"Either your email or password was wrong"}
 ```
 This message will most likely get changed into something more useful and or truthful in the future.
