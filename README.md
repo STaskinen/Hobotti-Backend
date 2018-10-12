@@ -5,7 +5,7 @@ API Base URL:
 
 ## Main POST methods
 ### Registration
-The registration uses the /users/ endpoint, taking in a json object that follows the following structure
+The registration uses the **/users/** endpoint, taking in a json object that follows the following structure
 ```json
 {
 	"name":"Username",
@@ -35,7 +35,7 @@ where we can see that the server has generated a salt and stored it and a hash g
 *At this time the only data required to get through the login are just the email and password fields.*
 
 ### "Login"
-The login uses the /users/login endpoint and takes in a json object of the users email and password like so
+The login uses the **/users/login** endpoint and takes in a json object of the users email and password like so
 ```json
 {
 	"email":"email@mail.com",
