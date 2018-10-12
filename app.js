@@ -49,8 +49,8 @@ const app = express();
 app.use(bodyParser.json());
 
 //COnnecting to Mongoose
-mongoose.connect('mongodb://localhost/hobotti');
-//mongoose.connect('mongodb://'+ mongoUser + ':' + dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
+//mongoose.connect('mongodb://localhost/hobotti');
+mongoose.connect('mongodb://'+ mongoUser + ':' + dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
 const db = mongoose.connection
 
 //Landing "page"
