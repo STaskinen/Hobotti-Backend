@@ -68,6 +68,11 @@ module.exports.validateUser = function(login, callback) {
     User.findOne({email: login.email}, callback);
 }
 
+// Validate User Token
+module.exports.vUserToken = function(id, callback) {
+    User.findById(id, {password: 0, _id: 0, __v: 0}, callback);
+}
+
 // Delete User
 module.exports.deleteUser = function(id, callback) {
     const query = {_id: id};

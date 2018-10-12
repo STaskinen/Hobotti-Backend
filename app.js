@@ -1,31 +1,36 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const crypto = require('crypto');
 
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
 // Getting data models
 const Hobby = require('./models/hobby.js');
 const User = require('./models/user.js');
 const SpoMo = require('./models/spomo.js');
 
+// Authorization files
+const authConfig = require('./config.js');
+const verifyToken = require('./VerifyToken.js');
+
 /*
  generates random string of characters i.e salt
  @function
  @param {number} length - Length of the random string.
- */
+ 
 
 let saltStringGen = function(length) {
     return crypto.randomBytes(Math.ceil(length/2))
        .toString('hex')
        .slice(0,length);
    };
-   /*
+  
     hash password with sha512.
     @function
     @param {string} password - List of required fields.
     @param {string} salt - Data to be validated.
-    */
+    
    let sha512 = function(password, salt){
        let hash = crypto.createHmac('sha512', salt);
        hash.update(password);
@@ -34,7 +39,7 @@ let saltStringGen = function(length) {
            salt:salt,
            passwordHash:value
        };
-   };
+   };*/
 
 
 const mongoUser = "backendUser";
@@ -44,7 +49,8 @@ const app = express();
 app.use(bodyParser.json());
 
 //COnnecting to Mongoose
-mongoose.connect('mongodb://'+ mongoUser + ':' + dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
+mongoose.connect('mongodb://localhost/hobotti');
+//mongoose.connect('mongodb://'+ mongoUser + ':' + dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
 const db = mongoose.connection
 
 //Landing "page"
@@ -97,6 +103,17 @@ app.get('/api/users', (req, res, next) => {
     })
 })
 
+//app.get('/api/users/me', verifyToken, (req,res,next) => {
+app.get('/api/users/:token', verifyToken, (req,res,next) => {
+        User.vUserToken(req.userId, (err, user) => {
+            if (err) return res.status(500).send({message: "There was a problem finding the user."});
+            
+            if (!user) return res.status(404).send({message: "No user found."})
+
+            res.status(200).send(user);
+        })
+})
+
 //Get a user by the id assigned by MongoDB
 app.get('/api/users/:_id', (req, res, next) => {
     User.getUsersById(req.params._id, (err, users) => { 
@@ -110,17 +127,19 @@ app.get('/api/users/:_id', (req, res, next) => {
 // Create a new user
 app.post('/api/users', (req, res, next) => {
     const user = req.body;
-    const salt = saltStringGen(32);
-    const passwordData = sha512(user.password, salt);
-    user.password = passwordData.passwordHash;
-    user.salt = passwordData.salt;
+    const passwordData = bcrypt.hashSync(user.password, 15)
+    user.password = passwordData;
     User.addUser(user, (err, user) => {
         if(err){
             throw err;
         }
-        res.json(user);
+        const token = jwt.sign({ id:user._id}, authConfig.secret, {expiresIn: 86400})
+        console.log(token);
+        res.status(200).send({auth: true, token: token});
     } )
 });
+
+
 
 // Update User
 app.put('/api/users/:id', (req, res, next) => {
@@ -149,25 +168,26 @@ app.delete('/api/users/:id', (req, res, next) => {
 app.post('/api/users/login/', (req, res, next) => {
     const login = req.body;
     User.validateUser(login, (err, user) => {
-        if(user) {
-        if(err){
-            throw err;
-        }
-        const salt = user.salt;
-        const passwordHashDB = user.password;
-        const tempHash = sha512(login.password, salt);
-        const passwordHashLogin = tempHash.passwordHash;
-        if(passwordHashDB === passwordHashLogin){
-        res.json(user);
-        } else {
-            res.json({validation:"Your password was wrong"});
-        }
-    } else {
-        if(err){
-            throw err;
-        }        
-        res.json({validation:"Your email was wrong"});
-    }
+        if (err) return res.status(500).send({message: "Error on the server."});
+        if(!user) return res.status(404).send({message:"No user found with that email. Check it or register."});
+
+        const passwordCheck = bcrypt.compareSync(login.password, user.password)
+        if(!passwordCheck){
+            res.status(401).send({ auth: false,
+                token: null,
+                message:"Your password was wrong"});
+            }
+            const token = jwt.sign({id: user._id}, authConfig.secret, {expiresIn: 86400 // expires in 24 hours
+            });
+        res.status(200).send({auth: true,
+            token: token,
+            message:"Login successful"
+            /*{
+            'username':user.name,
+            'email':user.email,
+            'hobbies':user.hobbies
+            */
+    });
     })
 })
 
