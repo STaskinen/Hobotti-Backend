@@ -5,7 +5,7 @@ API Base URL:
 
 ## Main POST methods
 ### Registration
-The registration uses the **/users/** endpoint, taking in a json object that follows the following structure
+The registration uses the **/users** endpoint, taking in a json object that follows the following structure
 ```json
 {
 	"name":"Username",
@@ -14,20 +14,13 @@ The registration uses the **/users/** endpoint, taking in a json object that fol
 	"hobbies":["hobby1", "hobby2"]
 }
 ```
-and if successful at creating/adding the account, returns the it's data like so 
+with the email and password fields being required at this moment.
+
+If the server is successful at creating/adding the account, the server generates and sends back a json with an access token
 ```json
 {
-    "hobbies": [
-        "hobby1",
-        "hobby2"
-    ],
-    "_id": "5bb23441c364610015e24f37",
-    "name": "Username",
-    "email": "email@mail.com",
-    "password": "1e23ee4e08f43a6e2e67ca0cb5403cfa49219032c8deef79afe1d17dc3a827c49278081ad4502d70795d305497182d1a67899c0b58bc7b4d9d92649be8d01a91",
-    "salt": "74d6fd710c54295bb0a157f3111596e4",
-    "create_date": "2018-10-01T14:50:41.012Z",
-    "__v": 0
+    "auth": true,
+    "token": "token-be-here"
 }
 ```
 
@@ -42,29 +35,44 @@ The login uses the **/users/login** endpoint and takes in a json object of the u
 	"password":"Passwording"
 }
 ```
-and if the inputted password matches the one in the database the users data is returned like so
+and if the inputted password matches the one in the database a json containing the authorization state and access token is returned
 ```json
 {
-    "hobbies": [
-        "hobby1",
-        "hobby2"
-    ],
-    "_id": "5bb23441c364610015e24f37",
-    "name": "Username",
-    "email": "email@mail.com",
-    "password": "1e23ee4e08f43a6e2e67ca0cb5403cfa49219032c8deef79afe1d17dc3a827c49278081ad4502d70795d305497182d1a67899c0b58bc7b4d9d92649be8d01a91",
-    "salt": "74d6fd710c54295bb0a157f3111596e4",
-    "create_date": "2018-10-01T14:50:41.012Z",
-    "__v": 0
+    "auth": true,
+    "token": "token-be-here",
+    "message": "Login successful"
 }
 ```
 
 If the passwords do not match then the server returns this json
 ```json
-{"validation":"Your password was wrong"}
+{"message":"Your password was wrong"}
 ```
 If the the inputted email can't be found in the database the server returns
 ```json
-{"validation":"Your email was wrong"}
+{"message":"No user found with that email. Check it or register"}
 ```
 These messages might get changed in the future.
+
+User's information can be obtained from the server by sending a GET request to the **/users/:token** endpoint and switching the :token with the access token obtained from either the registration or the login.
+If the provided access token is valid, the server returns a json with the users name, email, hobbies and creation date.
+```json
+{
+    "hobbies": [
+        "football",
+        "hockey",
+        "tennis"
+    ],
+    "name": "Testing Tommy",
+    "email": "Testing.Tommy@gmail.com",
+    "create_date": "2018-10-14T15:50:38.001Z"
+}
+```
+Otherwise it returns
+```json
+{
+    "auth": false,
+    "message": "Failed to authenticate token."
+}
+```
+
