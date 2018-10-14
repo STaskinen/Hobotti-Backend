@@ -14,6 +14,9 @@ const SpoMo = require('./models/spomo.js');
 const authConfig = require('./config.js');
 const verifyToken = require('./VerifyToken.js');
 
+// MongoDB/mLab Login Credentials
+const dbc = require('./dbconfig.json');
+
 /*
  generates random string of characters i.e salt
  @function
@@ -40,17 +43,14 @@ let saltStringGen = function(length) {
            passwordHash:value
        };
    };*/
-
-
-const mongoUser = "DBuser";
-const dbpassword = "password"   
+ 
 const app = express();
 
 app.use(bodyParser.json());
 
 //COnnecting to Mongoose
-mongoose.connect('mongodb://localhost/hobotti');
-//mongoose.connect('mongodb://'+ mongoUser + ':' + dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
+//mongoose.connect('mongodb://localhost/hobotti');
+mongoose.connect('mongodb://'+ dbc.mongoUser + ':' + dbc.dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
 const db = mongoose.connection
 
 //Landing "page"
@@ -58,7 +58,7 @@ app.get('/', (req, res, next) => {
     res.send('Please use /api/users endpoint');
 });
 
-
+/*
 // Get a list of all the hobbies
 app.get('/api/hobbies', (req, res, next) => {
     Hobby.getHobbies((err, hobbies) => { 
@@ -91,17 +91,9 @@ app.put('/api/hobbies/:id', (req, res, next) => {
         res.json(hobby);
     }, options )
 })
-
+*/
 // USERS
 // Get a list of all users
-app.get('/api/users', (req, res, next) => {
-    User.getUsers((err, users) => { 
-        if(err){
-            throw err;
-        }
-        res.json(users);
-    })
-})
 
 //app.get('/api/users/me', verifyToken, (req,res,next) => {
 app.get('/api/users/:token', verifyToken, (req,res,next) => {
@@ -112,16 +104,6 @@ app.get('/api/users/:token', verifyToken, (req,res,next) => {
 
             res.status(200).send(user);
         })
-})
-
-//Get a user by the id assigned by MongoDB
-app.get('/api/users/:_id', (req, res, next) => {
-    User.getUsersById(req.params._id, (err, users) => { 
-        if(err){
-            throw err;
-        }
-        res.json(users);
-    })
 })
 
 // Create a new user
@@ -139,24 +121,22 @@ app.post('/api/users', (req, res, next) => {
     } )
 });
 
-
-
 // Update User
-app.put('/api/users/:id', (req, res, next) => {
-    const id = req.params.id;
+app.put('/api/users/:token', verifyToken, (req, res, next) => {
+    const id = req.userId;
     const user = req.body;
     const options = {empty:'this is'};
     User.updateUser(id, user, (err, user) => {
         if(err){
             throw err;
         }
-        res.json(user);
+        res.status(200).send({"message":"Update Successful"});
     }, options )
 })
 
 // Delete User
-app.delete('/api/users/:id', (req, res, next) => {
-    const id = req.params.id;
+app.delete('/api/users/:token', verifyToken, (req, res, next) => {
+    const id = req.userId;
     User.deleteUser(id, (err, user) => {
         if(err){
             throw err;
