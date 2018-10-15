@@ -3,6 +3,8 @@
 API Base URL:
 [https://hobotti-backend-testing.herokuapp.com/api/](https://hobotti-backend-testing.herokuapp.com/api/)
 
+SWAGGER:[https://hobotti-backend-testing.herokuapp.com/api-docs/](https://hobotti-backend-testing.herokuapp.com/api-docs/)
+
 ## Main POST methods
 ### Registration
 The registration uses the **/users** endpoint, taking in a json object that follows the following structure

@@ -5,13 +5,18 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+
 // Getting data models
 const Hobby = require('./models/hobby.js');
 const User = require('./models/user.js');
 const SpoMo = require('./models/spomo.js');
 
 // Authorization files
-const authConfig = require('./config.js');
+//const authConfig = require('./config.js');
+const authConfig = require('./trueconfig.js');
 const verifyToken = require('./VerifyToken.js');
 
 // MongoDB/mLab Login Credentials
@@ -53,9 +58,12 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb://'+ dbc.mongoUser + ':' + dbc.dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
 const db = mongoose.connection
 
+// Swagger gets
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 //Landing "page"
 app.get('/', (req, res, next) => {
-    res.send('Please use /api/users endpoint');
+    res.send('Please go to /api-docs for the Swagger page');
 });
 
 /*
@@ -122,26 +130,46 @@ app.post('/api/users', (req, res, next) => {
 });
 
 // Update User
-app.put('/api/users/:token', verifyToken, (req, res, next) => {
-    const id = req.userId;
-    const user = req.body;
-    const options = {empty:'this is'};
-    User.updateUser(id, user, (err, user) => {
+app.put('/api/users/me', verifyToken, (req, res, next) => {
+    User.getUserById(req.userId, (err, dbData) => {
+        if(err){
+            throw err;
+        }
+        let user = req.body;
+        if (req.body.name == null) {
+            user.name = dbData.name;
+        }
+        if (req.body.password == null) {
+            user.password = dbData.password;
+        } else {
+            user.password = bcrypt.hashSync(req.body.password, 15)
+        }
+        if (req.body.email == null) {
+            user.email = dbData.email;
+        }
+        if (req.body.hobbies == null) {
+            user.hobbies = dbData.hobbies
+        }
+        const options = {fields:"fields"};
+    User.updateUser(req.userId, user, (err, user) => {
         if(err){
             throw err;
         }
         res.status(200).send({"message":"Update Successful"});
     }, options )
+    })
+    
+    
 })
 
 // Delete User
-app.delete('/api/users/:token', verifyToken, (req, res, next) => {
+app.delete('/api/users/me', verifyToken, (req, res, next) => {
     const id = req.userId;
     User.deleteUser(id, (err, user) => {
         if(err){
             throw err;
         }
-        res.json(user);
+        res.status(200).send({"message":"User Deleted"});
     })
 })
 // Validate User

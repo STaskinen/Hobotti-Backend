@@ -42,7 +42,7 @@ module.exports.getUsers = function(callback, limit) {
 }
 
 // Get Users by ID
-module.exports.getUsersById = function(userId, callback) {
+module.exports.getUserById = function(userId, callback) {
     User.findById(userId, callback).limit();
 }
 
@@ -54,12 +54,13 @@ module.exports.addUser = function(user, callback) {
 // Update User
 module.exports.updateUser = function(id, user, options, callback) {
     const query = {_id: id};
-    const update = {
+    let update = {
         name: user.name,
         email: user.email,
         password: user.password,
         hobbies: user.hobbies
     }
+
     User.findOneAndUpdate(query, update, options, user, callback);
 }
 

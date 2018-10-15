@@ -1,0 +1,177 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Hobotti API",
+      "description": "Basic API with Express"
+    },
+    "host": "hobotti-backend-testing.herokuapp.com",
+    "basePath": "/api/",
+    "tags": [
+      {
+        "name": "Users",
+        "description": "API for users in the system"
+      }
+    ],
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+      "/users": {
+        "post": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Register an user",
+          "description": "Create new user in system",
+          "parameters": [
+            {
+              "name": "user",
+              "in": "body",
+              "description": "User that we want to create",
+              "schema": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "New user is created",
+              "schema": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          }
+        }
+      },
+      "/users/login":{
+        "post": {
+            "tags": [
+              "Users"
+            ],
+            "summary": "login to the system",
+            "description": "Login into the system",
+            "parameters": [
+              {
+                "name": "user",
+                "in": "body",
+                "description": "Login Credentials",
+                "schema": {
+                  "$ref": "#/definitions/users"
+                }
+              }
+            ],
+            "produces": [
+              "application/json"
+            ],
+            "responses": {
+              "200": {
+                "description": "Login successful",
+                "schema": {
+                  "$ref": "#/definitions/users"
+                }
+              }
+            }
+          }
+        },
+      "/users/me": {
+        "parameters": [
+          {
+            "name": "hobotti-access-token",
+            "in": "header",
+            "required": true,
+            "description": "The token given when successfully registered or logged in",
+            "type": "string"
+          }
+        ],
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Get user data",
+          "responses": {
+            "200": {
+              "description": "User is found",
+              "schema": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          }
+        },
+        "delete": {
+          "summary": "Delete user",
+          "tags": [
+            "Users"
+          ],
+          "responses": {
+            "200": {
+              "description": "User is deleted",
+              "schema": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          }
+        },
+        "put": {
+          "summary": "Update user",
+          "tags": [
+            "Users"
+          ],
+          "parameters": [
+            {
+              "name": "user",
+              "in": "body",
+              "description": "User with new values of properties",
+              "schema": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "User is updated",
+              "schema": {
+                "$ref": "#/definitions/users"
+              }
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "users": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+            "name": {
+                "type": "string"
+            },
+            "email": {
+                "type": "string",
+                "uniqueItems": true
+            },
+            "password": {
+                "type": "string",
+                "uniqueItems": true
+            },
+            "hobbies": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                }
+            }
+        }
+      }
+    }
+  }
