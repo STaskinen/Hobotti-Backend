@@ -54,7 +54,7 @@ If the the inputted email can't be found in the database the server returns
 ```
 These messages might get changed in the future.
 
-###GET user info
+### GET user info
 
 User's information can be obtained from the server by sending a GET request to the **/users/me** endpoint with a header with the key name of 
 **"hobotti-access-token"** 
