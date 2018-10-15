@@ -95,8 +95,8 @@ app.put('/api/hobbies/:id', (req, res, next) => {
 // USERS
 // Get a list of all users
 
-//app.get('/api/users/me', verifyToken, (req,res,next) => {
-app.get('/api/users/:token', verifyToken, (req,res,next) => {
+app.get('/api/users/me', verifyToken, (req,res,next) => {
+//app.get('/api/users/:token', verifyToken, (req,res,next) => {
         User.vUserToken(req.userId, (err, user) => {
             if (err) return res.status(500).send({message: "There was a problem finding the user."});
             

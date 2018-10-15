@@ -54,7 +54,7 @@ If the the inputted email can't be found in the database the server returns
 ```
 These messages might get changed in the future.
 
-User's information can be obtained from the server by sending a GET request to the **/users/:token** endpoint and switching the :token with the access token obtained from either the registration or the login.
+User's information can be obtained from the server by sending a GET request to the **/users/me** endpoint with a header with the key name of "hobotti-access-token" without the quotes and the value of the token string gotten from a successful login or registration.
 If the provided access token is valid, the server returns a json with the users name, email, hobbies and creation date.
 ```json
 {

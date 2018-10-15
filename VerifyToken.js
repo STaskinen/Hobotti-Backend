@@ -3,8 +3,8 @@ const authConfig = require('./config');
 
 
 function verifyToken(req, res, next) {
-    const token = req.params.token;
-    //const token = req.headers['x-access-token'];
+    //const token = req.params.token;
+    const token = req.headers['hobotti-access-token'];
   if (!token)
     return res.status(403).send({ auth: false, message: 'No token provided.' });
   jwt.verify(token, authConfig.secret, function(err, decoded) {
