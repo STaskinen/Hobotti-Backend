@@ -5,7 +5,7 @@
       "title": "Hobotti API",
       "description": "Basic API with Express"
     },
-    "host": "hobotti-backend-testing.herokuapp.com",
+    "host": "localhost",
     "basePath": "/api/",
     "tags": [
       {

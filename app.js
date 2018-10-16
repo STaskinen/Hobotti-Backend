@@ -6,8 +6,11 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerDocument = require('./swagger.json');
+//const swaggerDocument = require('./swagger.json');
+const swaggerJSDoc = require('swagger-jsdoc');
 
+const https = require("https");
+const fs = require("fs");
 
 // Getting data models
 const Hobby = require('./models/hobby.js');
@@ -16,7 +19,7 @@ const SpoMo = require('./models/spomo.js');
 
 // Authorization files
 //const authConfig = require('./config.js');
-const authConfig = require('./trueconfig.js');
+const Config = require('./trueconfig.json');
 const verifyToken = require('./VerifyToken.js');
 
 // MongoDB/mLab Login Credentials
@@ -58,8 +61,11 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb://'+ dbc.mongoUser + ':' + dbc.dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
 const db = mongoose.connection
 
+const swaggerOptions = require('./swagger-config.json');
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
 // Swagger gets
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //Landing "page"
 app.get('/', (req, res, next) => {
@@ -103,6 +109,30 @@ app.put('/api/hobbies/:id', (req, res, next) => {
 // USERS
 // Get a list of all users
 
+/**
+ * @swagger
+ * /users/me:
+ *   post:
+ *     tags:
+ *       - Users
+ *     summary: Get user information by providing the access token
+ *     produces:
+ *      - application/json
+ *     security:
+ *      - APIKey: []
+ *     parameters:
+ *      - name: hobotti-access-token
+ *        in: header
+ *        required: true
+ *        description: The token given when successfully registered or logged in
+ *        type: string
+ *     responses:
+ *       200:
+ *         description: User was found
+ *         schema:
+ *           $ref: '#definitions/users'
+ *       
+ */
 app.get('/api/users/me', verifyToken, (req,res,next) => {
 //app.get('/api/users/:token', verifyToken, (req,res,next) => {
         User.vUserToken(req.userId, (err, user) => {
@@ -114,6 +144,28 @@ app.get('/api/users/me', verifyToken, (req,res,next) => {
         })
 })
 
+/**
+ * @swagger
+ * /users:
+ *   post:
+ *     tags:
+ *       - Users
+ *     summary: Create a New User
+ *     produces:
+ *      - application/json
+ *     parameters:
+ *      - name: user credentials
+ *        in: body
+ *        description: The information of the user we want to create.
+ *        schema:
+ *          $ref: '#/definitions/users'
+ *     responses:
+ *       200:
+ *         description: New user was created
+ *         schema:
+ *           $ref: '#/definitions/users'
+ *       
+ */
 // Create a new user
 app.post('/api/users', (req, res, next) => {
     const user = req.body;
@@ -123,7 +175,7 @@ app.post('/api/users', (req, res, next) => {
         if(err){
             throw err;
         }
-        const token = jwt.sign({ id:user._id}, authConfig.secret, {expiresIn: 86400})
+        const token = jwt.sign({ id:user._id}, Config.secret, {expiresIn: 86400})
         console.log(token);
         res.status(200).send({auth: true, token: token});
     } )
@@ -185,7 +237,7 @@ app.post('/api/users/login/', (req, res, next) => {
                 token: null,
                 message:"Your password was wrong"});
             }
-            const token = jwt.sign({id: user._id}, authConfig.secret, {expiresIn: 86400 // expires in 24 hours
+            const token = jwt.sign({id: user._id}, Config.secret, {expiresIn: 86400 // expires in 24 hours
             });
         res.status(200).send({auth: true,
             token: token,
@@ -197,6 +249,20 @@ app.post('/api/users/login/', (req, res, next) => {
             */
     });
     })
+})
+
+// Linked Events
+app.get('/api/events', (req, res, next) => {
+
+
+const options = {
+    hostname: "api.hel.fi/linkedevents/v1",
+    port: 443,
+    path: "/event/47794",
+    method: "GET"
+};
+const event = https.request(options)
+    res.status(200).send(event);
 })
 
 const port = process.env.PORT || 3000;
