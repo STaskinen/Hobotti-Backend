@@ -11,6 +11,10 @@
       {
         "name": "Users",
         "description": "API for users in the system"
+      },
+      {
+        "name": "Events",
+        "description": "API to get data from Linked Events"
       }
     ],
     "schemes": [
@@ -142,6 +146,31 @@
               "schema": {
                 "$ref": "#/definitions/users"
               }
+            }
+          }
+        }
+      },
+        "/events/{search}": {
+          "get": {
+          "summary": "Get event data from Linked Events",
+          "tags":[
+            "Events"
+          ],
+          "produces":[
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name":"search",
+              "in": "path",
+              "description":"Hobby you want find events for.",
+              "required": true,
+              "type": "string"
+            }            
+          ],
+          "responses": {
+            "200": {
+              "description": "User is found"
             }
           }
         }

@@ -2,20 +2,24 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
+const cors = require('cors')
+
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
 const swaggerUi = require('swagger-ui-express');
-//const swaggerDocument = require('./swagger.json');
-const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerDocument = require('./swagger.json');
+//const swaggerJSDoc = require('swagger-jsdoc');
 
-const https = require("https");
-const fs = require("fs");
+const request = require('request');
 
 // Getting data models
 const Hobby = require('./models/hobby.js');
 const User = require('./models/user.js');
 const SpoMo = require('./models/spomo.js');
+
+//
+const HelData = require('./src/hel.js');
 
 // Authorization files
 //const authConfig = require('./config.js');
@@ -54,6 +58,7 @@ let saltStringGen = function(length) {
  
 const app = express();
 
+app.use(cors())
 app.use(bodyParser.json());
 
 //COnnecting to Mongoose
@@ -62,10 +67,10 @@ mongoose.connect('mongodb://'+ dbc.mongoUser + ':' + dbc.dbpassword + '@ds259742
 const db = mongoose.connection
 
 const swaggerOptions = require('./swagger-config.json');
-const swaggerSpec = swaggerJSDoc(swaggerOptions);
+//const swaggerSpec = swaggerJSDoc(swaggerOptions);
 
 // Swagger gets
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 //Landing "page"
 app.get('/', (req, res, next) => {
@@ -252,17 +257,24 @@ app.post('/api/users/login/', (req, res, next) => {
 })
 
 // Linked Events
-app.get('/api/events', (req, res, next) => {
+app.get('/api/events/:keyword', (req, res, next) => {
+    HelData.basicSearch(req.params.keyword, (err, data) => {
+        if(err){
+            res.status(500).send({message: 'Helsinki servers fucked up'});
+        }
+        HelData.DataSnip(data, (snip) => {
+            if(err){
+                res.status(500).send({message: "Snipper Malfunction"})
+            }
+            if(snip.count === 0){
+                res.status(404).send({message: "No Events found in Linked Events"})
+            }
+            res.status(200).send(snip);
+        })
 
 
-const options = {
-    hostname: "api.hel.fi/linkedevents/v1",
-    port: 443,
-    path: "/event/47794",
-    method: "GET"
-};
-const event = https.request(options)
-    res.status(200).send(event);
+        //res.status(200).send(finalData);
+    })
 })
 
 const port = process.env.PORT || 3000;
