@@ -2,8 +2,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
-const cors = require('cors')
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
@@ -58,7 +56,6 @@ let saltStringGen = function(length) {
  
 const app = express();
 
-app.use(cors())
 app.use(bodyParser.json());
 
 //COnnecting to Mongoose
