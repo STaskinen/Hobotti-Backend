@@ -6,7 +6,7 @@ API Base URL:
 SWAGGER:[https://hobotti-backend-testing.herokuapp.com/api-docs/](https://hobotti-backend-testing.herokuapp.com/api-docs/)
 
 ## Main POST methods
-### Registration
+### Registration (/users)
 The registration uses the **/users** endpoint, taking in a json object that follows the following structure
 ```json
 {
@@ -29,7 +29,7 @@ If the server is successful at creating/adding the account, the server generates
 where we can see that the server has generated a salt and stored it and a hash generated using that salt and the given password with rest of the user data.
 *At this time the only data required to get through the login are just the email and password fields.*
 
-### Login
+### Login (/users/login)
 The login uses the **/users/login** endpoint and takes in a json object of the users email and password like so
 ```json
 {
@@ -56,7 +56,8 @@ If the the inputted email can't be found in the database the server returns
 ```
 These messages might get changed in the future.
 
-### GET user info
+## Main GET methods
+### User info (/users/me)
 
 User's information can be obtained from the server by sending a GET request to the **/users/me** endpoint with a header with the key name of 
 **"hobotti-access-token"** 
@@ -81,4 +82,7 @@ Otherwise it returns
     "message": "Failed to authenticate token."
 }
 ```
+### Hobby (/hobby/)
+
+
 

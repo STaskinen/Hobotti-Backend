@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
 
+const hobbyList = [
+"Jalkapallo","Jääkiekko","Pesäpallo","Luistelu","Lentopallo","Salibandy","Lentopallo","Golf","Tennis","Tanssi"
+]
+
 // Hobby Schema
 const hobbySchema = mongoose.Schema({
     name:{
@@ -25,7 +29,9 @@ const Hobby = module.exports = mongoose.model('Hobby', hobbySchema);
 
 // Get Hobbies
 module.exports.getHobbies = function(callback, limit) {
-    Hobby.find(callback).limit(limit);
+    //Hobby.find(callback).limit(limit);
+
+    callback(hobbyList);
 }
 
 // Add Hobbies
