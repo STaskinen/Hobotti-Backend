@@ -7,6 +7,7 @@ const bcrypt = require('bcryptjs');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');
+//const swaggerJSDoc = require('swagger-jsdoc');
 
 
 // Getting data models
@@ -14,9 +15,12 @@ const Hobby = require('./models/hobby.js');
 const User = require('./models/user.js');
 const SpoMo = require('./models/spomo.js');
 
+// Helsinki Open APIs
+const HelData = require('./src/hel.js');
+
 // Authorization files
-//const authConfig = require('./config.js');
-const authConfig = require('./trueconfig.json');
+const authConfig = require('./config.js');
+const authConfig = require('./trueconfig.js');
 const verifyToken = require('./VerifyToken.js');
 
 // MongoDB/mLab Login Credentials
@@ -58,6 +62,10 @@ app.use(bodyParser.json());
 mongoose.connect('mongodb://'+ dbc.mongoUser + ':' + dbc.dbpassword + '@ds259742.mlab.com:59742/heroku_z33wwwf1');
 const db = mongoose.connection
 
+//const swaggerOptions = require('./swagger-config.json');
+//const swaggerSpec = swaggerJSDoc(swaggerOptions);
+
+
 // Swagger gets
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -66,16 +74,18 @@ app.get('/', (req, res, next) => {
     res.send('Please go to /api-docs for the Swagger page');
 });
 
-/*
-// Get a list of all the hobbies
-app.get('/api/hobbies', (req, res, next) => {
-    Hobby.getHobbies((err, hobbies) => { 
-        if(err){
+app.get('/api/hobby', (req, res, next) => {
+    Hobby.getHobbies((hobbies) => { 
+        /* if(err){
             throw err;
-        }
-        res.json(hobbies);
+        } */
+        res.status(200).send({hobbies});
     })
 });
+
+/*
+// Get a list of all the hobbies
+
 
 // Create a hobby
 app.post('/api/hobbies', (req, res, next) => {
@@ -196,6 +206,27 @@ app.post('/api/users/login/', (req, res, next) => {
             'hobbies':user.hobbies
             */
     });
+    })
+})
+
+// Linked Events
+app.get('/api/events/:keyword', verifyToken, (req, res, next) => {
+    HelData.basicSearch(req.params.keyword, (err, data) => {
+        if(err){
+            res.status(500).send({message: 'Helsinki servers fucked up'});
+        }
+        HelData.DataSnip(data, (snip) => {
+            if(err){
+                res.status(500).send({message: "Snipper Malfunction"})
+            }
+            if(snip.count === 0){
+                res.status(404).send({message: "No Events found in Linked Events"})
+            }
+            res.status(200).send(snip);
+        })
+
+
+        //res.status(200).send(finalData);
     })
 })
 

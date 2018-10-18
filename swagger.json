@@ -1,90 +1,189 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "version": "1.0.0",
-      "title": "Hobotti API",
-      "description": "Basic API with Express"
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Hobotti API",
+    "description": "Basic API with Express"
+  },
+  "host": "hobotti-backend-testing.herokuapp.com",
+  "basePath": "/api/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "API for users in the system"
     },
-    "host": "hobotti-backend-testing.herokuapp.com",
-    "basePath": "/api/",
-    "tags": [
-      {
-        "name": "Users",
-        "description": "API for users in the system"
+    {
+      "name": "Events",
+      "description": "API to get data from Linked Events"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/hobby": {
+    "get": {
+      "tags": [
+        "Hobby"
+      ],
+      "summary": "Get an array of hobbies",
+      "description": "Get an array of hobbies",
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "List found"
+        }
       }
-    ],
-    "schemes": [
-      "http"
-    ],
-    "consumes": [
-      "application/json"
-    ],
-    "produces": [
-      "application/json"
-    ],
-    "paths": {
-      "/users": {
-        "post": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Register an user",
-          "description": "Create new user in system",
-          "parameters": [
-            {
-              "name": "user",
-              "in": "body",
-              "description": "User that we want to create",
-              "schema": {
-                "$ref": "#/definitions/users"
-              }
+    }
+  },
+    "/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Register an user",
+        "description": "Create new user in system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/users"
             }
-          ],
-          "produces": [
-            "application/json"
-          ],
-          "responses": {
-            "200": {
-              "description": "New user is created",
-              "schema": {
-                "$ref": "#/definitions/users"
-              }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "login to the system",
+        "description": "Login into the system",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Login Credentials",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "parameters": [
+        {
+          "name": "hobotti-access-token",
+          "in": "header",
+          "required": true,
+          "description": "The token given when successfully registered or logged in",
+          "type": "string"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user data",
+        "responses": {
+          "200": {
+            "description": "User is found",
+            "schema": {
+              "$ref": "#/definitions/users"
             }
           }
         }
       },
-      "/users/login":{
-        "post": {
-            "tags": [
-              "Users"
-            ],
-            "summary": "login to the system",
-            "description": "Login into the system",
-            "parameters": [
-              {
-                "name": "user",
-                "in": "body",
-                "description": "Login Credentials",
-                "schema": {
-                  "$ref": "#/definitions/users"
-                }
-              }
-            ],
-            "produces": [
-              "application/json"
-            ],
-            "responses": {
-              "200": {
-                "description": "Login successful",
-                "schema": {
-                  "$ref": "#/definitions/users"
-                }
-              }
+      "delete": {
+        "summary": "Delete user",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "User is deleted",
+            "schema": {
+              "$ref": "#/definitions/users"
             }
           }
-        },
-      "/users/me": {
+        }
+      },
+      "put": {
+        "summary": "Update user",
+        "tags": [
+          "Users"
+        ],
         "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User with new values of properties",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User is updated",
+            "schema": {
+              "$ref": "#/definitions/users"
+            }
+          }
+        }
+      }
+    },
+    "/events/{search}": {
+      "get": {
+        "summary": "Get event data from Linked Events",
+        "tags": [
+          "Events"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "path",
+            "description": "Hobby you want find events for.",
+            "required": true,
+            "type": "string"
+          },
           {
             "name": "hobotti-access-token",
             "in": "header",
@@ -93,85 +192,111 @@
             "type": "string"
           }
         ],
-        "get": {
-          "tags": [
-            "Users"
-          ],
-          "summary": "Get user data",
-          "responses": {
-            "200": {
-              "description": "User is found",
-              "schema": {
-                "$ref": "#/definitions/users"
-              }
+        "responses": {
+          "200": {
+            "description": "Events Found",
+            "schema": {
+              "$ref": "#/definitions/eventlist"
             }
           }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "eventlist": {
+      "properties": {
+        "count": {
+          "type": "integer"
         },
-        "delete": {
-          "summary": "Delete user",
-          "tags": [
-            "Users"
-          ],
-          "responses": {
-            "200": {
-              "description": "User is deleted",
-              "schema": {
-                "$ref": "#/definitions/users"
-              }
-            }
-          }
-        },
-        "put": {
-          "summary": "Update user",
-          "tags": [
-            "Users"
-          ],
-          "parameters": [
-            {
-              "name": "user",
-              "in": "body",
-              "description": "User with new values of properties",
-              "schema": {
-                "$ref": "#/definitions/users"
-              }
-            }
-          ],
-          "responses": {
-            "200": {
-              "description": "User is updated",
-              "schema": {
-                "$ref": "#/definitions/users"
-              }
-            }
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/event"
           }
         }
       }
     },
-    "definitions": {
-      "users": {
-        "required": [
-          "email",
-          "password"
-        ],
-        "properties": {
-            "name": {
-                "type": "string"
-            },
-            "email": {
-                "type": "string",
-                "uniqueItems": true
-            },
-            "password": {
-                "type": "string",
-                "uniqueItems": true
-            },
-            "hobbies": {
-                "type": "array",
-                "items": {
-                    "type": "string"
-                }
-            }
+    "event": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/multilingual"
+          }
+        },
+        "provider": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/multilingual"
+          }
+        },
+        "s_desc": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/multilingual"
+          }
+        },
+        "desc": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/multilingual"
+          }
+        },
+        "info": {
+          "type": "string"
+        },
+        "price": {
+          "type": "object"
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "multilingual": {
+      "properties": {
+        "sv": {
+          "type": "string"
+        },
+        "en": {
+          "type": "string"
+        },
+        "fi": {
+          "type": "string"
+        }
+      }
+    },
+    "users": {
+      "required": [
+        "email",
+        "password"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "hobbies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     }
   }
+}
