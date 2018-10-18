@@ -16,7 +16,7 @@ const SpoMo = require('./models/spomo.js');
 
 // Authorization files
 //const authConfig = require('./config.js');
-const authConfig = require('./trueconfig.js');
+const authConfig = require('./trueconfig.json');
 const verifyToken = require('./VerifyToken.js');
 
 // MongoDB/mLab Login Credentials
