@@ -6,7 +6,7 @@ const ISOdate = jsdate.toISOString();
 let future = new Date();
 future.setDate(future.getDate() + 365);
 const ISOfuture = future.toISOString();
-    request('http://api.hel.fi/linkedevents/v1/search/?type=event&q=' + keyword + '&start=' + ISOdate, {json: true}, callback )
+    request('https://api.hel.fi/linkedevents/v1/search/?type=event&q=' + keyword + '&start=' + ISOdate, {json: true}, callback )
 }
 
 module.exports.DataSnip = function(rawData, callback) {
