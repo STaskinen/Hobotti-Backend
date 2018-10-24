@@ -84,5 +84,63 @@ Otherwise it returns
 ```
 ### Hobby (/hobby/)
 
+Hobby returns a list of hobbies
+```json
+{
+    "hobbies": [
+        "Jalkapallo",
+        "Jääkiekko",
+        "Pesäpallo",
+        "Luistelu",
+        "Lentopallo",
+        "Salibandy",
+        "Lentopallo",
+        "Golf",
+        "Tennis",
+        "Tanssi"
+    ]
+}
+```
 
+### Eventlist (/events/{keyword})
 
+Eventlist takes in the **hobotti-access-token** in the headers that is used to make sure that the user is authorized and a keyword in the path that will be relayed to the City of Helsinki's Linked Events Open API to get the relevant data.
+Other data sources such as the City of Helsinki's Linked Courses Open API might be added in the future and for this reason we truncate some of the information given by the Linked Events API into our own set of data for events.
+```json
+{
+            "id": "",
+            "name": {
+                "sv": "",
+                "en": "",
+                "fi": ""
+            },
+            "provider": {
+                "sv": "",
+                "en": "",
+                "fi": ""
+            },
+            "s_desc": {
+                "sv": "",
+                "en": "",
+                "fi": ""
+            },
+            "desc": {
+                "sv": "",
+                "en": "",
+                "fi": ""
+            },
+            "info": {
+                "sv": "",
+                "en": "",
+                "fi": ""
+            },
+            "price": [
+                {
+                    "sv": "",
+                    "en": "",
+                    "fi": ""
+                }
+            ],
+            "images": []
+        }
+```
