@@ -1,0 +1,1120 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Hobotti API",
+    "description": "A basic backend API for the hobby/likemided community finder mobile app Hobotti. <br> Please contact the developers to gain access to the API key needed to use this API.",
+    "contact": {
+      "email": "santtu-taskinen@outlook.com"
+    }
+  },
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Endpoints concerning creation and use of user accounts in the system"
+    },
+    {
+      "name": "Events",
+      "description": "Endpoints to get data from Linked Events and Linked Courses"
+    },
+    {
+      "name": "Logs",
+      "description": "Endpoints to the data of the chatroom messages and events on the database"
+    }
+  ],
+  "paths": {
+    "/hobby": {
+      "get": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "tags": [
+          "Hobby"
+        ],
+        "summary": "Get an array of hobbies",
+        "description": "Get an array of hobbies",
+        "responses": {
+          "200": {
+            "description": "List found",
+            "content": {
+              "application/array": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/hobbylistItems"
+                  }
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong."
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "post": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Register an user",
+        "description": "Create new user in system. Takes in the APIkey in the \"hobotti-api-key\" header.",
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authsuccess"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "No valid email provided",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/users"
+              }
+            }
+          },
+          "description": "User that we want to create"
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "login to the system",
+        "description": "Login into the system",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/login"
+              }
+            }
+          },
+          "description": "Login Credentials"
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/authsuccess"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Wrong password was given",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "tags": [
+          "Users"
+        ],
+        "summary": "Get user data",
+        "responses": {
+          "200": {
+            "description": "User was found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/users"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No user found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "There was a problem finding the user.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "summary": "Delete user",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "User is deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/users"
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong with the user account deletion."
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "summary": "Update user",
+        "tags": [
+          "Users"
+        ],
+        "responses": {
+          "200": {
+            "description": "User is updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/users"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found."
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong while updating the user."
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/users"
+              }
+            }
+          },
+          "description": "User with new values of properties"
+        }
+      }
+    },
+    "/events/{search}": {
+      "get": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "summary": "Get event data from Linked Events",
+        "tags": [
+          "Events"
+        ],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "path",
+            "description": "Hobby you want find events for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Events Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/eventlist"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No events found for provided search term.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs/chat/{chatroom}": {
+      "get": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "summary": "Get the last twenty messages in a given chatroom.",
+        "tags": [
+          "Logs"
+        ],
+        "parameters": [
+          {
+            "name": "chatroom",
+            "in": "path",
+            "description": "The name of the chatroom you want to get the last twenty messages of.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages found successfully",
+            "content": {
+              "application/array": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/chatLogItem"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No messages were found in the logs for the given chatroom.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong serverside while searching the logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs/events/{username}": {
+      "get": {
+        "security": [
+          {
+            "APIAccess": [],
+            "HobottiAccess": []
+          }
+        ],
+        "summary": "Get the last twenty chat events (currently only joining and leaving chatrooms) of a specific user.",
+        "tags": [
+          "Logs"
+        ],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "path",
+            "description": "The name of the user whose movements you want to follow.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Messages found successfully",
+            "content": {
+              "application/array": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/eventLogItem"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No messages were found in the logs for the given chatroom.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "463": {
+            "description": "No API Key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "464": {
+            "description": "Invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "473": {
+            "description": "No access token provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Something went wrong serverside while searching the logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "565": {
+            "description": "Something went wrong with the API key verification.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          },
+          "570": {
+            "description": "Something went wrong while trying to authenticate token.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/messageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://hobotti-backend-testing.herokuapp.com/api/"
+    },
+    {
+      "url": "http://hobotti-backend-testing.herokuapp.com/api/"
+    },
+    {
+      "url": "http://localhost:3000/api/"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "APIAccess": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "hobotti-api-key"
+      },
+      "HobottiAccess": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "hobotti-access-token"
+      }
+    },
+    "schemas": {
+      "chatLogItem": {
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "room": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "eventLogItem": {
+        "properties": {
+          "event": {
+            "type": "string"
+          },
+          "user": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "authsuccess": {
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "eventlist": {
+        "properties": {
+          "count": {
+            "type": "integer"
+          },
+          "fetchDate": {
+            "type": "string"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/event"
+            }
+          }
+        }
+      },
+      "event": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/multilingual"
+          },
+          "name": {
+            "$ref": "#/components/schemas/multilingual"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/multilingual"
+          },
+          "s_desc": {
+            "$ref": "#/components/schemas/multilingual"
+          },
+          "desc": {
+            "$ref": "#/components/schemas/multilingual"
+          },
+          "info": {
+            "type": "string"
+          },
+          "start_time": {
+            "type": "string"
+          },
+          "end_time": {
+            "type": "string"
+          },
+          "price": {
+            "$ref": "#/components/schemas/multilingual"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "multilingual": {
+        "properties": {
+          "sv": {
+            "type": "string"
+          },
+          "en": {
+            "type": "string"
+          },
+          "fi": {
+            "type": "string"
+          }
+        }
+      },
+      "login": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "users": {
+        "required": [
+          "name",
+          "email",
+          "password",
+          "hobbies"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "password": {
+            "type": "string",
+            "uniqueItems": true
+          },
+          "hobbies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "messageResponse": {
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "hobbylistItems": {
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "APIAccess": [],
+      "HobottiAccess": []
+    }
+  ]
+}

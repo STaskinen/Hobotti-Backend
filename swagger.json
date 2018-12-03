@@ -18,6 +18,7 @@
     }
   ],
   "schemes": [
+    "https",
     "http"
   ],
   "consumes": [
@@ -250,7 +251,11 @@
           "type": "string"
         },
         "price": {
-          "type": "object"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/multilingual"
+          }
+
         },
         "images": {
           "type": "array",
