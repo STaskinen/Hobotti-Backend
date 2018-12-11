@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+// Basic backbone for the once planned Spontaneus events.
+// Most likely never to be implemented.
+
 // Spontaneous Moment/Event Schema
 const spomoSchema = mongoose.Schema({
     creator:{

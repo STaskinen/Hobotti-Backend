@@ -1,5 +1,9 @@
 const request = require('request');
 
+// The eventSnipper() function takes in data and a origin as an int and morphs
+// the data into a more simplified model, taking only what will be needed
+// by the client app.
+
 const eventSnipper = (data, origin) => {
     const fetchDate = new Date();
     let snipData = {
@@ -93,19 +97,9 @@ const eventSnipper = (data, origin) => {
     return snipData;
 }
 
-// Sends a request to the City of Helsinki Linked Event API to calculate how many pages of events are available
-/* const pageCalc = (keyword, ISOdate) => {
-    let pageAmmount;
-    request('https://api.hel.fi/linkedevents/v1/search/?type=event&q=' + keyword + '&start=' + ISOdate, {json: true}, function (err, data) {
-        if (err) throw err;
-        //console.log(data.body.meta.count)
-        const eventsAmmount = data.body.meta.count;
-        pageAmmount = Math.ceil( eventsAmmount / 100 );
-    })
-    return (pageAmmount);
-} */
-
-// Sends a request to the City of Helsinki Linked Event API to find events for the provided keyword/searchterm starting from the moment of creation of the request.
+// Sends a request to the City of Helsinki Linked Events API to find events for
+// the provided keyword/searchterm starting from the moment of creation of
+// the request.
 module.exports.LESearch = function (keyword, page, callback) {
     const jsdate = new Date();
     const ISOdate = jsdate.toISOString();
@@ -118,7 +112,9 @@ module.exports.LESearch = function (keyword, page, callback) {
         json: true
     }, callback)
 }
-
+// Sends a request to the City of Helsinki Linked Courses API to find events for
+// the provided keyword/searchterm starting from the moment of creation of
+// the request.
 module.exports.LCSearch = function (keyword, page, callback) {
     const jsdate = new Date();
     const ISOdate = jsdate.toISOString();
@@ -132,6 +128,10 @@ module.exports.LCSearch = function (keyword, page, callback) {
     }, callback)
 }
 
+// The DataSnip Function below takes in the data the server recieves from the
+// City of Helsinki's Linked Events and Linked Courses APIs, tries to conform
+// them to one data model with the help of the eventSnipper() function to
+// make it easier for future data source additions. 
 module.exports.DataSnip = function (LEdata, LCdata, callback) {
     try {
 

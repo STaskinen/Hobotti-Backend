@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 
+// List of hobbies used by the client app.
 const hobbyList =
 [
     {
@@ -16,6 +17,36 @@ const hobbyList =
         url:"hobotti-backend-testing.herokuapp.com/images/Kulttuuri.jpg"},
     {
         name:"Tanssi",
+        url:"hobotti-backend-testing.herokuapp.com/images/Tanssi.jpg"},    
+    {
+        name:"Luonto",
+        url:"hobotti-backend-testing.herokuapp.com/images/Taide.jpg"},
+    {
+        name:"Jumppa",
+        url:"hobotti-backend-testing.herokuapp.com/images/Taide.jpg"},
+    {
+        name:"Elokuva",
+        url:"hobotti-backend-testing.herokuapp.com/images/Teatteri.jpg"},
+    {
+        name:"Kirjallisuus",
+        url:"hobotti-backend-testing.herokuapp.com/images/Kulttuuri.jpg"},
+    {
+        name:"Ooppera",
+        url:"hobotti-backend-testing.herokuapp.com/images/Tanssi.jpg"},
+    {
+        name:"Sarjakuva",
+        url:"hobotti-backend-testing.herokuapp.com/images/Musiikki.jpg"},
+    {
+        name:"Joulu",
+        url:"hobotti-backend-testing.herokuapp.com/images/Taide.jpg"},
+    {
+        name:"Askartelu",
+        url:"hobotti-backend-testing.herokuapp.com/images/Teatteri.jpg"},
+    {
+        name:"Pelit",
+        url:"hobotti-backend-testing.herokuapp.com/images/Kulttuuri.jpg"},
+    {
+        name:"Juokseminen",
         url:"hobotti-backend-testing.herokuapp.com/images/Tanssi.jpg"
     }
 ]
@@ -50,12 +81,12 @@ module.exports.getHobbies = function(callback, limit) {
     callback(hobbyList);
 }
 
-// Add Hobbies
+// Add Hobbies (Unused)
 module.exports.addHobby = function(hobby, callback) {
     Hobby.create(hobby, callback);
 }
 
-//Update Hobbies
+//Update Hobbies (Unused)
 module.exports.updateHobby = function(id, hobby, options, callback) {
     const query = {_id: id};
     const update = {

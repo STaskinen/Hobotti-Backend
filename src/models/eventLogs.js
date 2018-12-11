@@ -26,6 +26,8 @@ const eventLogSchema = mongoose.Schema({
 
 const eventLog = module.exports = mongoose.model('eventLog', eventLogSchema);
 
+// Function to retrieve chat events that have happened on the server 
+// and been recorded in the database.
 module.exports.getMessageLog = ( username, limit, callback) => {
     eventLog.find({user: username},{_id: 0, __v: 0})
     .sort({'date': -1})

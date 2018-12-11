@@ -1,18 +1,10 @@
 const socketio = require('socket.io');
 
+// Mongoose data models for message recording
 const chatLogs = require('./models/chatLogs.js');
 const eventLogs = require('./models/eventLogs.js');
 
-//Remember to remove before becoming reliant
-const fs = require('fs');
 
-const checkLogsDir = () => {
-  if(!fs.existsSync('Logs')) {
-    fs.mkdir('./Logs', (err) => {
-      if (err) console.log('Failed to creater ./Logs directory')
-    })
-  }
-}
 let getRoom = (socket) => {
   for (let key in socket.rooms) {
       if (key != socket.id) {
@@ -21,59 +13,6 @@ let getRoom = (socket) => {
   }
 }
 
-//New Code for Chat Logging
-  const chatLogger = (data, socket) => {
-    checkLogsDir();
-    if (fs.existsSync('./Logs/Roomlog_Chat_'+ getRoom(socket) +'.txt'))
-    {
-      //||<<-->>||
-      //To be removed after testing
-      //Chat logging into a file
-      const date = new Date();
-      fs.appendFile('./Logs/Roomlog_Chat_'+ getRoom(socket) +'.txt', '"' + data + '","' + socket.username + '",' + date.toISOString() + '\n', function (err) {
-        if (err) console.log(err);
-        //console.log('Message Logged')
-      });
-      //||<<-->>||
-    } else {
-      fs.appendFile('./Logs/Roomlog_Chat_'+ getRoom(socket) +'.txt', 'MESSAGE,USER,DATE' + '\n', function (err) {
-        if (err) throw err;
-        const date = new Date();
-      fs.appendFile('./Logs/Roomlog_Chat_'+ getRoom(socket) +'.txt', '"' + data + '","' + socket.username + '",' + date.toISOString() + '\n', function (err) {
-        if (err) console.log(err);
-        //console.log('Message Logged')
-      });
-      })
-      
-    }
-  
-}
-
-const eventTextLogger = (data, socket) => {
-  checkLogsDir();
-  if (fs.existsSync('./Logs/Roomlog_Events.txt'))
-  {
-    //||<<-->>||
-    //To be removed after testing
-    //Chat logging into a file
-    const date = new Date();
-    fs.appendFile('./Logs/Roomlog_Events.txt', '"' + data + '","' + socket.username + '",' + date.toISOString() + '\n', function (err) {
-      if (err) console.log(err);
-      //console.log('Event Logged')
-    });
-    //||<<-->>||
-  } else {
-    fs.appendFile('./Logs/Roomlog_Events.txt', 'EVENT,USER,DATE' + '\n', function (err) {
-      if (err) throw err;
-      const date = new Date();
-    fs.appendFile('./Logs/Roomlog_Events.txt', '"' + data + '","' + socket.username + '",' + date.toISOString() + '\n', function (err) {
-      if (err) console.log(err);
-      //console.log('Event Logged')
-    });
-    })
-    
-  }
-}
 const eventDBLogger = (socket, event) => {
 eventLogs.addLoggedMessage({
   user: socket.username,
